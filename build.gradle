@@ -1,0 +1,69 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
+    implementation 'org.testng:testng:7.4.0'
+    implementation 'ch.qos.logback:logback-classic:1.2.5'
+
+    compileOnly 'org.projectlombok:lombok:1.18.16'
+    annotationProcessor 'org.projectlombok:lombok:1.18.16'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.16'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+}
+
+test {
+    useTestNG()
+}
+
+task sanity(type: Test){
+    useTestNG{
+        suites 'src/test/resources/testng-sanity.xml'
+    }
+    if(project.hasProperty('browser')){
+        systemProperty 'browser', "${browser}"
+    }
+    if(project.hasProperty('target')){
+        systemProperty 'target', "${target}"
+    }
+}
+
+task sanityElena(type: Test){
+    useTestNG{
+        suites 'src/test/resources/testng-sanity.xml'
+    }
+    if(project.hasProperty('browser')){
+        systemProperty 'browser', "${browser}"
+    }
+    systemProperty 'target', "elena"
+
+}
+
+task debug(type: Test){
+    useTestNG{
+        suites 'src/test/resources/testng-debug.xml'
+    }
+    if(project.hasProperty('browser')){
+        systemProperty 'browser', "${browser}"
+    }
+    if(project.hasProperty('target')){
+        systemProperty 'target', "${target}"
+    }
+}
+task clearBoards(type: Test){
+    useTestNG{
+        suites 'src/test/resources/testng-cleanBoard.xml'
+    }
+    if(project.hasProperty('target')){
+        systemProperty 'target', "${target}"
+    }
+}
